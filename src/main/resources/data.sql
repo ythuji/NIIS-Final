@@ -1,0 +1,9 @@
+-- ==============================================================================
+-- NIDIS Seed Data - Initial Roles
+-- ==============================================================================
+-- IF NOT EXISTS (SELECT 1 FROM roles WHERE name = 'ROLE_ADMIN')
+--     INSERT INTO roles (name, description) VALUES ('ROLE_ADMIN', 'System Administrator');
+-- IF NOT EXISTS (SELECT 1 FROM roles WHERE name = 'ROLE_OFFICER')
+--     INSERT INTO roles (name, description) VALUES ('ROLE_OFFICER', 'Verification Officer');
+-- IF NOT EXISTS (SELECT 1 FROM roles WHERE name = 'ROLE_CITIZEN')
+--     INSERT INTO roles (name, description) VALUES ('ROLE_CITIZEN', 'Citizen Applicant');
