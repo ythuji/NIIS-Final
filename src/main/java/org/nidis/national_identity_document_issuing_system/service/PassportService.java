@@ -41,6 +41,8 @@ public class PassportService {
             if (!application.getUser().getId().equals(user.getId())) {
                 throw new IllegalStateException("Unauthorized");
             }
+
+            // New application create
         } else {
             application = new PassportApplication();
             application.setUser(user);
@@ -62,6 +64,7 @@ public class PassportService {
         application.setStatus(ApplicationStatus.SUBMITTED);
         application.setIsDraft(false);
 
+        //CREATE - Save a new passport application
         PassportApplication saved = passportRepository.save(application);
 
         // Upload attached documents directly to MS SQL database
@@ -80,6 +83,7 @@ public class PassportService {
     @Transactional
     public PassportApplication saveAsDraft(PassportApplicationDto dto, User user) throws IOException {
         PassportApplication application;
+       //UPDATE - Find existing passport application
         if (dto.getId() != null) {
             application = passportRepository.findById(dto.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Application not found"));
@@ -107,6 +111,7 @@ public class PassportService {
         application.setStatus(ApplicationStatus.DRAFT);
         application.setIsDraft(true);
 
+        // CREATE/UPDATE -Modify an existing passport application
         PassportApplication saved = passportRepository.save(application);
         saveAttachedDocuments(saved.getId(), dto);
 
@@ -115,6 +120,7 @@ public class PassportService {
     }
 
     public PassportApplicationDto getDraftOrNewForm(User user, ApplicationCategory category) {
+
         Optional<PassportApplication> draftOpt = passportRepository.findFirstByUserIdAndCategoryAndIsDraftTrue(user.getId(), category);
         if (draftOpt.isPresent()) {
             PassportApplication draft = draftOpt.get();
@@ -150,10 +156,12 @@ public class PassportService {
         return passportRepository.findByReferenceNumber(existingPassportNumber.trim());
     }
 
+    // VIEW / READ -  Retrieve passport applications
     public List<PassportApplication> getApplicationsByUser(Long userId) {
         return passportRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
+   // READ -  Retrieve passport applications
     public Optional<PassportApplication> getApplicationById(Long id) {
         return passportRepository.findById(id);
     }
@@ -172,6 +180,7 @@ public class PassportService {
         }
 
         fileStorageService.deleteDocumentsByApplication(app.getId(), ApplicationType.PASSPORT);
+        //DELETE - Remove a draft passport application
         passportRepository.delete(app);
         log.info("Draft passport application #{} discarded", id);
     }
